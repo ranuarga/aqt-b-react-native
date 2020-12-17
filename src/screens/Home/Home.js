@@ -19,7 +19,7 @@ export default function Home() {
         <View style={styles.container}>
             <StatusBar
                 barStyle="light-content"
-                backgroundColor="#4F6D7A"
+                backgroundColor="#000000"
             />
             <Text style={styles.welcome}>
                 Welcome to React Native!
@@ -39,17 +39,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#4F6D7A',
+        backgroundColor: '#FFFFFF',
     },
     welcome: {
         fontSize: 20,
         textAlign: 'center',
         margin: 10,
-        color: '#F5FCFF',
+        color: '#000000',
     },
     instructions: {
         textAlign: 'center',
-        color: '#F5FCFF',
+        color: '#000000',
         marginBottom: 5,
     },
 });
