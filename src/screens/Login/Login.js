@@ -1,14 +1,14 @@
 import React from 'react'
-import { StyleSheet, TextInput, View, Button } from 'react-native'
+import { StyleSheet, TextInput, Text, View, TouchableOpacity } from 'react-native'
 
 export default class Login extends React.Component {
     state = {
-        email: '',
+        username: '',
         password: ''
     }
 
-    handleEmailChange = email => {
-        this.setState({ email })
+    handleUsernameChange = username => {
+        this.setState({ username })
     }
 
     handlePasswordChange = password => {
@@ -16,9 +16,9 @@ export default class Login extends React.Component {
     }
 
     onLogin = async () => {
-        const { email, password } = this.state
+        const { username, password } = this.state
         try {
-            if (email.length > 0 && password.length > 0) {
+            if (username.length > 0 && username.length > 0) {
                 this.props.navigation.navigate('App')
             }
         } catch (error) {
@@ -28,30 +28,40 @@ export default class Login extends React.Component {
 
     goToSignup = () => this.props.navigation.navigate('Signup')
     render() {
-        const { email, password } = this.state
+        const { username, password } = this.state
 
         return (
             <View style={styles.container}>
-                <View style={{ margin: 10 }}>
+                <Text style={styles.logo}>Farmer Login</Text>
+                <View style={styles.inputView}>
                     <TextInput
-                        name='email'
-                        value={email}
-                        placeholder='Enter email'
+                        name='username'
+                        value={username}
+                        placeholder='Username'
                         autoCapitalize='none'
-                        onChangeText={this.handleEmailChange}
+                        onChangeText={this.handleUsernameChange}
+                        style={styles.inputText}
                     />
                 </View>
-                <View style={{ margin: 10 }}>
+                <View style={styles.inputView}>
                     <TextInput
                         name='password'
                         value={password}
-                        placeholder='Enter password'
+                        placeholder='Password'
                         secureTextEntry
                         onChangeText={this.handlePasswordChange}
+                        style={styles.inputText}
                     />
                 </View>
-                <Button title='Login' onPress={this.onLogin} />
-                <Button title='Go to Signup' onPress={this.goToSignup} />
+                <TouchableOpacity>
+                    <Text style={styles.forgotText}>Forget Password?</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.loginBtn} onPress={this.onLogin}>
+                    <Text style={styles.loginText}>LOGIN</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.goToSignup}>
+                    <Text style={styles.inputText}>Create your Account</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -60,8 +70,45 @@ export default class Login extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFFFF',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    logo:{
+        fontWeight:"bold",
+        fontSize:46,
+        color:"#000000",
+        marginBottom:40
+    },
+    loginText:{
+        fontWeight:"bold",
+        color:"#FFFFFF"
+    },
+    inputView:{
+        width:"80%",
+        backgroundColor:"#e6e6e6",
+        borderRadius:25,
+        height:50,
+        marginBottom:20,
+        justifyContent:"center",
+        padding:20
+    },
+    inputText:{
+        height:50,
+        color:"#999999"
+    },
+    forgotText:{
+        color:"#999999",
+        fontSize:11
+    },
+    loginBtn:{
+        width:"80%",
+        backgroundColor:"#57b846",
+        borderRadius:25,
+        height:50,
+        alignItems:"center",
+        justifyContent:"center",
+        marginTop:40,
+        marginBottom:10
     }
 })
