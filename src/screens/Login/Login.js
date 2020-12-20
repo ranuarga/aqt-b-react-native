@@ -27,6 +27,9 @@ export default class Login extends React.Component {
     }
 
     goToSignup = () => this.props.navigation.navigate('Signup')
+
+    goToForgetPassword = () => this.props.navigation.navigate('ForgetPassword')
+
     render() {
         const { username, password } = this.state
 
@@ -53,7 +56,7 @@ export default class Login extends React.Component {
                         style={styles.inputText}
                     />
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.goToForgetPassword}>
                     <Text style={styles.forgotText}>Forget Password?</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.loginBtn} onPress={this.onLogin}>
