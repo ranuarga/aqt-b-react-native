@@ -1,21 +1,46 @@
 import React from 'react'
 import { StyleSheet, TextInput, Text, View, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
+import { Dropdown } from 'react-native-material-dropdown'
+import { LogBox } from 'react-native';
 
 const { height } = Dimensions.get('window')
 
 export default class Signup extends React.Component {
     state = {
-        screenHeight: height
+        screenHeight: height,
+        ddlSelectedValue: 'L'
     }
 
     onContentSizeChange = (contentWidth, contentHeight) => {
         this.setState({ screenHeight: contentHeight })
     }
+
+    setSelectedStateValue = (ddlValue) => {
+        this.setState({ ddlSelectedValue: ddlValue })
+    }
     
     goToLogin = () => this.props.navigation.navigate('Login')
 
+    componentDidMount() {
+        LogBox.ignoreLogs([
+            'Animated: `useNativeDriver`',
+            'componentWillUpdate',
+            'componentWillReceiveProps'
+        ]);
+    }
+    
     render() {
         const scrollEnabled = this.state.screenHeight > height;
+        let data = [
+            {
+                label: 'Laki - laki',
+                value: 'L'
+            },
+            {
+                label: 'Perempuan',
+                value: 'P'
+            }
+        ]
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -61,8 +86,16 @@ export default class Signup extends React.Component {
                         <View style={styles.inputView}>
                             <TextInput name='phone' placeholder='Phone' autoCapitalize='none' style={styles.inputText}/>
                         </View>
-                        <View style={styles.inputView}>
-                            <TextInput name='gender' placeholder='Gender' autoCapitalize='sentences' style={styles.inputText}/>
+                        <View style={styles.dropdownView}>
+                            {/* <TextInput name='gender' placeholder='Gender' autoCapitalize='sentences' style={styles.inputText}/> */}
+                            <Dropdown
+                                label='Gender'
+                                data={data}
+                                value={this.state.ddlSelectedValue}
+                                style={styles.inputDropdown}
+                                useNativeDriver={true}
+                                onChangeText={(value,index,data)=>this.setSelectedStateValue(value)}
+                            />
                         </View>
                         <TouchableOpacity style={styles.registerBtn}>
                             <Text style={styles.registerText}>REGISTER</Text>
@@ -110,8 +143,18 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         padding:20
     },
+    dropdownView:{
+        backgroundColor:"#e6e6e6",
+        borderRadius:25,
+        height:65,
+        justifyContent:"center",
+        padding:20
+    },
     inputText:{
         height:50,
+        color:"#999999"
+    },
+    inputDropdown:{
         color:"#999999"
     },
     forgotText:{
