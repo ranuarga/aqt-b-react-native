@@ -1,4 +1,5 @@
 import React from 'react'
+import { login } from '../../utils/JWTAuth'
 import { StyleSheet, TextInput, Text, View, TouchableOpacity } from 'react-native'
 
 export default class Login extends React.Component {
@@ -16,10 +17,15 @@ export default class Login extends React.Component {
     }
 
     onLogin = async () => {
-        const { username, password } = this.state
+        // const { username, password } = this.state
+        let data = this.state
         try {
-            if (username.length > 0 && username.length > 0) {
+            // if (username.length > 0 && username.length > 0) {
+            let success = await login(data)
+            if (success) {
                 this.props.navigation.navigate('App')
+            } else {
+                alert('Gagal Login')
             }
         } catch (error) {
             alert(error)
