@@ -1,11 +1,13 @@
 import React from 'react'
 import { login } from '../../utils/JWTAuth'
+import Loader from '../../components/Loader'
 import { StyleSheet, TextInput, Text, View, TouchableOpacity } from 'react-native'
 
 export default class Login extends React.Component {
     state = {
         username: '',
-        password: ''
+        password: '',
+        loading: false
     }
 
     handleUsernameChange = username => {
@@ -19,9 +21,15 @@ export default class Login extends React.Component {
     onLogin = async () => {
         // const { username, password } = this.state
         let data = this.state
+        this.setState({
+            loading: true
+        })
         try {
             // if (username.length > 0 && username.length > 0) {
             let success = await login(data)
+            this.setState({
+                loading: false
+            })
             if (success) {
                 this.props.navigation.navigate('App')
             } else {
@@ -41,6 +49,7 @@ export default class Login extends React.Component {
 
         return (
             <View style={styles.container}>
+                <Loader loading={this.state.loading} />
                 <Text style={styles.logo}>Farmer Login</Text>
                 <View style={styles.inputView}>
                     <TextInput

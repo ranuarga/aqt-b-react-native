@@ -17,8 +17,7 @@ const login = async (data) => {
             AsyncStorage.setItem('token', token)
             AsyncStorage.setItem('name', name)
             AsyncStorage.setItem('idUser', JSON.stringify(idUser))
-            console.log('poi')
-            
+
             return true
         }
     } catch(e) {
