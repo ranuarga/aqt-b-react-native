@@ -2,21 +2,55 @@ import React from 'react'
 import { StyleSheet, TextInput, Text, View, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
 import { Dropdown } from 'react-native-material-dropdown'
 import { LogBox } from 'react-native';
+import { register } from '../../utils/JWTAuth'
+import Loader from '../../components/Loader'
 
 const { height } = Dimensions.get('window')
 
 export default class Signup extends React.Component {
-    state = {
-        screenHeight: height,
-        ddlSelectedValue: 'L'
+    state = { 
+        idUser : '', name : '', username : '',
+		email : '', password : '', address : '',
+		phone : '', gender : '', screenHeight: height,
+        ddlSelectedValue: 'L', loading: false
     }
 
+    handleIdUserChange = idUser => { this.setState({ idUser }) }
+    handleNameChange = name => { this.setState({ name }) }
+    handleUsernameChange = username => { this.setState({ username }) }
+    handleEmailChange = email => { this.setState({ email }) }
+    handlePasswordChange = password => { this.setState({ password }) }
+    handleAddressChange = address => { this.setState({ address }) }
+    handlePhoneChange = phone => { this.setState({ phone }) }
+
+    onRegister = async () => {
+        let post_data = this.state
+        this.setState({
+            loading: true
+        })
+        try {
+            let success = await register(post_data)
+            this.setState({
+                loading: false
+            })
+            if (success) {
+                alert('Register Success')
+                this.props.navigation.navigate('Login')
+            } else {
+                alert('Register Failed')
+            }
+        } catch (error) {
+            alert(error)
+        }
+    }
+    
     onContentSizeChange = (contentWidth, contentHeight) => {
         this.setState({ screenHeight: contentHeight })
     }
 
     setSelectedStateValue = (ddlValue) => {
         this.setState({ ddlSelectedValue: ddlValue })
+        this.setState({ gender: ddlValue })
     }
     
     goToLogin = () => this.props.navigation.navigate('Login')
@@ -31,7 +65,7 @@ export default class Signup extends React.Component {
     
     render() {
         const scrollEnabled = this.state.screenHeight > height;
-        let data = [
+        let data_gender = [
             {
                 label: 'Laki - laki',
                 value: 'L'
@@ -41,8 +75,11 @@ export default class Signup extends React.Component {
                 value: 'P'
             }
         ]
+        const { idUser, name, username, email, password, address, phone } = this.state
+        
         return (
             <View style={styles.container}>
+                <Loader loading={this.state.loading} />
                 <ScrollView
                     style={{ flex: 1 }}
                     contentContainerStyle={styles.scrollView}
@@ -52,52 +89,86 @@ export default class Signup extends React.Component {
                     <View style={styles.content}>
                         <Text style={styles.logo}>Farmer Register</Text>
                         <View style={styles.inputView}>
-                            <TextInput name='nik' placeholder='NIK' autoCapitalize='none' style={styles.inputText}/>
+                            <TextInput
+                                name='idUser'
+                                value={idUser}
+                                placeholder='NIK'
+                                autoCapitalize='none'
+                                onChangeText={this.handleIdUserChange}
+                                style={styles.inputText}
+                            />
                         </View>
                         <View style={styles.inputView}>
-                            <TextInput name='name' placeholder='Name' autoCapitalize='sentences' style={styles.inputText}/>
+                            <TextInput
+                                name='name'
+                                value={name}
+                                placeholder='Name'
+                                autoCapitalize='sentences'
+                                onChangeText={this.handleNameChange}
+                                style={styles.inputText}
+                            />
                         </View>
                         <View style={styles.inputView}>
                             <TextInput
                                 name='username'
-                                // value={username}
+                                value={username}
                                 placeholder='Username'
                                 autoCapitalize='none'
-                                // onChangeText={this.handleUsernameChange}
+                                onChangeText={this.handleUsernameChange}
                                 style={styles.inputText}
                             />
                         </View>
                         <View style={styles.inputView}>
-                            <TextInput name='email' placeholder='Email' autoCapitalize='none' style={styles.inputText}/>
+                            <TextInput
+                                name='email'
+                                value={email}
+                                placeholder='Email'
+                                autoCapitalize='none'
+                                onChangeText={this.handleEmailChange}
+                                style={styles.inputText}
+                            />
                         </View>
                         <View style={styles.inputView}>
                             <TextInput
                                 name='password'
-                                // value={password}
+                                value={password}
                                 placeholder='Password'
                                 secureTextEntry
-                                // onChangeText={this.handlePasswordChange}
+                                onChangeText={this.handlePasswordChange}
                                 style={styles.inputText}
                             />
                         </View>
                         <View style={styles.inputView}>
-                            <TextInput name='address' placeholder='Address' autoCapitalize='sentences' style={styles.inputText}/>
+                            <TextInput
+                                name='address'
+                                value={address}
+                                placeholder='Address'
+                                autoCapitalize='sentences'
+                                onChangeText={this.handleAddressChange}
+                                style={styles.inputText}
+                            />
                         </View>
                         <View style={styles.inputView}>
-                            <TextInput name='phone' placeholder='Phone' autoCapitalize='none' style={styles.inputText}/>
+                            <TextInput
+                                name='phone'
+                                value={phone}
+                                placeholder='Phone'
+                                autoCapitalize='none'
+                                onChangeText={this.handlePhoneChange}
+                                style={styles.inputText}
+                            />
                         </View>
                         <View style={styles.dropdownView}>
-                            {/* <TextInput name='gender' placeholder='Gender' autoCapitalize='sentences' style={styles.inputText}/> */}
                             <Dropdown
                                 label='Gender'
-                                data={data}
+                                data={data_gender}
                                 value={this.state.ddlSelectedValue}
                                 style={styles.inputDropdown}
                                 useNativeDriver={true}
                                 onChangeText={(value,index,data)=>this.setSelectedStateValue(value)}
                             />
                         </View>
-                        <TouchableOpacity style={styles.registerBtn}>
+                        <TouchableOpacity style={styles.registerBtn} onPress={this.onRegister}>
                             <Text style={styles.registerText}>REGISTER</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={this.goToLogin} style={styles.loginBtn}>
