@@ -27,19 +27,23 @@ const login = async (data) => {
     return false
 }
 
-// const register = async (data) => {
-//     const SIGNUP_ENDPOINT = `${SERVER_URL}/api/register.php`;
-//     try {
-//         let response = await axios({
-//             method: 'post',
-//             responseType: 'json',
-//             url: SIGNUP_ENDPOINT,
-//             data: data
-//         });
-//     } catch(e){
-//         console.log(e);
-//     }
-// }
+const register = async (data) => {
+    const SIGNUP_ENDPOINT = `${SERVER_URL}/register`;
+    try {
+        let response = await axios({
+            method: 'post',
+            responseType: 'json',
+            url: SIGNUP_ENDPOINT,
+            data: data
+        });
+        if(response.data.success) 
+            return true
+        else
+            return false
+    } catch(e){
+        console.log(e);
+    }
+}
 
 const logout = () => {
     AsyncStorage.removeItem('token')
@@ -49,5 +53,5 @@ const logout = () => {
 
 export { 
     login, 
-    // register,
+    register,
     logout }
