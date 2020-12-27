@@ -19,13 +19,11 @@ export default class Login extends React.Component {
     }
 
     onLogin = async () => {
-        // const { username, password } = this.state
         let data = this.state
         this.setState({
             loading: true
         })
         try {
-            // if (username.length > 0 && username.length > 0) {
             let success = await login(data)
             this.setState({
                 loading: false
@@ -33,7 +31,7 @@ export default class Login extends React.Component {
             if (success) {
                 this.props.navigation.navigate('App')
             } else {
-                alert('Gagal Login')
+                alert('Login Failed')
             }
         } catch (error) {
             alert(error)
