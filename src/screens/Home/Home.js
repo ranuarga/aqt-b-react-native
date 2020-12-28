@@ -1,37 +1,48 @@
-import React, { Component } from 'react';
-import {
-    Platform,
-    StyleSheet,
-    Text,
-    View,
-    StatusBar
-} from 'react-native';
+import React from 'react';
+import { logout } from '../../utils/JWTAuth'
+import Loader from '../../components/Loader'
+import { StyleSheet, Text, View, StatusBar, TouchableOpacity } from 'react-native';
 
-const instructions = Platform.select({
-    ios: 'Press Cmd+R to reload,\n' +
-        'Cmd+D or shake for dev menu',
-    android: 'Double tap R on your keyboard to reload,\n' +
-        'Shake or press menu button for dev menu',
-});
+export default class Home extends React.Component {
+    state = {
+        loading: false
+    }
 
-export default function Home() {
-    return (
-        <View style={styles.container}>
-            <StatusBar
-                barStyle="light-content"
-                backgroundColor="#000000"
-            />
-            <Text style={styles.welcome}>
-                Welcome to React Native!
-            </Text>
-            <Text style={styles.instructions}>
-                To get started, edit App.js
-            </Text>
-            <Text style={styles.instructions}>
-                {instructions}
-            </Text>
-        </View>
-    )
+    onLogout = async () => {
+        this.setState({
+            loading: true
+        })
+        try {
+            await logout()
+            this.setState({
+                loading: false
+            })
+            this.props.navigation.navigate('Login')
+        } catch (error) {
+            alert(error)
+        }
+    }    
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <Loader loading={this.state.loading} />
+                <StatusBar
+                    barStyle="light-content"
+                    backgroundColor="#000000"
+                />
+                <Text style={styles.welcome}>
+                    Home
+                </Text>
+                <Text style={styles.instructions}>
+                    Under Construction
+                </Text>
+                <TouchableOpacity onPress={this.onLogout}>
+                    <Text>LOGOUT</Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
