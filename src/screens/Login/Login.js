@@ -1,5 +1,5 @@
 import React from 'react'
-import { login } from '../../utils/JWTAuth'
+import { login, isLoggedIn } from '../../utils/JWTAuth'
 import Loader from '../../components/Loader'
 import { StyleSheet, TextInput, Text, View, TouchableOpacity } from 'react-native'
 
@@ -8,6 +8,15 @@ export default class Login extends React.Component {
         username: '',
         password: '',
         loading: false
+    }
+
+    componentDidMount () {
+        isLoggedIn()
+            .then(res => {
+                if(res)
+                    this.props.navigation.navigate('App')
+            })
+            .catch(err => console.log(err));
     }
 
     handleUsernameChange = username => {

@@ -45,13 +45,29 @@ const register = async (data) => {
     }
 }
 
-const logout = () => {
-    AsyncStorage.removeItem('token')
-    AsyncStorage.removeItem('name')
-    AsyncStorage.removeItem('idUser')
+const logout = async () => {
+    await AsyncStorage.removeItem('token')
+    await AsyncStorage.removeItem('name')
+    await AsyncStorage.removeItem('idUser')
+}
+
+const isLoggedIn = () => {
+    return new Promise((resolve, reject) => {
+        AsyncStorage.getItem('token')
+            .then(res => {
+                if (res !== null) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch(err => reject(err));
+        });
 }
 
 export { 
     login, 
     register,
-    logout }
+    logout,
+    isLoggedIn
+}
