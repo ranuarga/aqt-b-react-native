@@ -1,6 +1,7 @@
 import React from 'react'
 import { login, isLoggedIn } from '../../utils/JWTAuth'
 import Loader from '../../components/Loader'
+import HeaderAuth from '../../components/HeaderAuth'
 import { StyleSheet, TextInput, Text, View, TouchableOpacity } from 'react-native'
 
 export default class Login extends React.Component {
@@ -56,6 +57,7 @@ export default class Login extends React.Component {
 
         return (
             <View style={styles.container}>
+                <HeaderAuth/>
                 <Loader loading={this.state.loading} />
                 <Text style={styles.logo}>Farmer Login</Text>
                 <View style={styles.inputView}>

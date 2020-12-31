@@ -2,7 +2,7 @@ import React from 'react';
 import { logout } from '../../utils/JWTAuth'
 import Loader from '../../components/Loader'
 import Header from '../../components/Header'
-import { StyleSheet, Text, View, StatusBar, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 export default class Home extends React.Component {
     state = {
