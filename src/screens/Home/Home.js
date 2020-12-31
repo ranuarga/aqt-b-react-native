@@ -1,6 +1,7 @@
 import React from 'react';
 import { logout } from '../../utils/JWTAuth'
 import Loader from '../../components/Loader'
+import Header from '../../components/Header'
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity } from 'react-native';
 
 export default class Home extends React.Component {
@@ -25,22 +26,21 @@ export default class Home extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <Loader loading={this.state.loading} />
-                <StatusBar
-                    barStyle="light-content"
-                    backgroundColor="#000000"
-                />
-                <Text style={styles.welcome}>
-                    Home
-                </Text>
-                <Text style={styles.instructions}>
-                    Under Construction
-                </Text>
-                <TouchableOpacity onPress={this.onLogout}>
-                    <Text>LOGOUT</Text>
-                </TouchableOpacity>
-            </View>
+            <React.Fragment>
+                <Header/>
+                <View style={styles.container}>
+                    <Loader loading={this.state.loading} />
+                    <Text style={styles.welcome}>
+                        Home
+                    </Text>
+                    <Text style={styles.instructions}>
+                        Under Construction
+                    </Text>
+                    <TouchableOpacity onPress={this.onLogout}>
+                        <Text>LOGOUT</Text>
+                    </TouchableOpacity>
+                </View>
+            </React.Fragment>
         )
     }
 }

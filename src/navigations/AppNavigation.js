@@ -1,8 +1,8 @@
 //AppNavigation.js
-import { createStackNavigator } from 'react-navigation-stack'
+import { createDrawerNavigator } from 'react-navigation-drawer'
 import Home from '../screens/Home/Home'
 
-const AppNavigation = createStackNavigator(
+const AppNavigation = createDrawerNavigator(
     {
         Home: { screen: Home }
     },

@@ -1,4 +1,3 @@
-//index.js
 import { createSwitchNavigator, createAppContainer } from 'react-navigation'
 import AuthNavigation from './AuthNavigation'
 import AppNavigation from './AppNavigation'
