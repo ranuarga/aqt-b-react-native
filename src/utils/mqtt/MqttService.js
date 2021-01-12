@@ -19,6 +19,9 @@ class MqttService {
         this.onConnectionLostHandler=undefined;
         this.isConnected=false;
     }
+    disconnectClient = () => {
+        this.client.disconnect()
+    }
     connectClient= (onSuccessHandler, onConnectionLostHandler) => {
         this.onSuccessHandler=onSuccessHandler;
         this.onConnectionLostHandler=onConnectionLostHandler;
@@ -44,7 +47,13 @@ class MqttService {
         this.isConnected=false;
         Alert.alert(
             'Could not connect to MQTT',
-            [{ text: 'TRY AGAIN', onPress: () => this.connectClient(this.onSuccessHandler, this.onConnectionLostHandler) }],
+            '',
+            [
+                { 
+                    text: 'TRY AGAIN',
+                    onPress: () => this.connectClient(this.onSuccessHandler, this.onConnectionLostHandler) 
+                }
+            ],
             {
                 cancelable:false,
             },

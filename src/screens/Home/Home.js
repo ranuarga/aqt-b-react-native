@@ -7,6 +7,8 @@ import MqttService from '../../utils/mqtt/MqttService'
 import OfflineNotification from '../../components/OfflineNotification'
 
 export default class Home extends React.Component {
+    _isMounted = false
+
     state = {
         isConnected: false,
         loading: false,
@@ -20,18 +22,24 @@ export default class Home extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true
         MqttService.connectClient(
             this.mqttSuccessHandler,
             this.mqttConnectionLostHandler
         )
     }
 
+    componentWillUnmount() {
+        this._isMounted = false
+    }
+
     mqttSuccessHandler = () => {
-        console.info('connected to mqtt')
         MqttService.subscribe('AQT28X', this.onSub)
-        this.setState({
-            isConnected: true
-        })
+        if (this._isMounted) {
+            this.setState({
+                isConnected: true
+            })
+        }
     }
 
     mqttConnectionLostHandler = () => {
@@ -58,6 +66,8 @@ export default class Home extends React.Component {
             loading: true
         })
         try {
+            await MqttService.unsubscribe('AQT28X')
+            await MqttService.disconnectClient()
             await logout()
             this.setState({
                 loading: false
