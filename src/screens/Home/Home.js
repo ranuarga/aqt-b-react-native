@@ -3,10 +3,41 @@ import { logout } from '../../utils/JWTAuth'
 import Loader from '../../components/Loader'
 import Header from '../../components/Header'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import MqttService from '../../utils/mqtt/MqttService'
+import OfflineNotification from '../../components/OfflineNotification'
 
 export default class Home extends React.Component {
     state = {
-        loading: false
+        isConnected: false,
+        loading: false,
+        message: ''
+    }
+
+    componentDidMount() {
+        MqttService.connectClient(
+            this.mqttSuccessHandler,
+            this.mqttConnectionLostHandler
+        )
+    }
+
+    mqttSuccessHandler = () => {
+        console.info('connected to mqtt')
+        MqttService.subscribe('AQT28X', this.onSub)
+        this.setState({
+            isConnected: true
+        })
+    }
+
+    mqttConnectionLostHandler = () => {
+        this.setState({
+            isConnected: false
+        })
+    }
+
+    onSub = message => {
+        this.setState({
+            message,
+        })
     }
 
     onLogout = async () => {
@@ -25,16 +56,18 @@ export default class Home extends React.Component {
     }    
 
     render() {
+        const { isConnected, message } = this.state
         return (
             <React.Fragment>
                 <Header/>
                 <View style={styles.container}>
+                    {/* { !isConnected && <OfflineNotification/> } */}
                     <Loader loading={this.state.loading} />
                     <Text style={styles.welcome}>
-                        Home
+                        AQT28X
                     </Text>
                     <Text style={styles.instructions}>
-                        Under Construction
+                        You received message: {message}
                     </Text>
                     <TouchableOpacity onPress={this.onLogout}>
                         <Text>LOGOUT</Text>
