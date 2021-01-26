@@ -2,9 +2,10 @@ import React from 'react';
 import { logout } from '../../utils/JWTAuth'
 import Loader from '../../components/Loader'
 import Header from '../../components/Header'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, LogBox } from 'react-native'
 import MqttService from '../../utils/mqtt/MqttService'
 import OfflineNotification from '../../components/OfflineNotification'
+import { Dropdown } from 'react-native-material-dropdown'
 
 export default class Home extends React.Component {
     _isMounted = false
@@ -18,10 +19,21 @@ export default class Home extends React.Component {
         do2: '',
         ammonia: '',
         feed2: '',
-        duty_cycle: '' 
+        duty_cycle: '',
+        idDevice: '',
+    }
+
+    setSelectedStateValue = (ddlValue) => {
+        this.setState({ idDevice: ddlValue })
     }
 
     componentDidMount() {
+        LogBox.ignoreLogs([
+            'Animated: `useNativeDriver`',
+            'componentWillUpdate',
+            'componentWillReceiveProps'
+        ])
+
         this._isMounted = true
         MqttService.connectClient(
             this.mqttSuccessHandler,
@@ -89,15 +101,34 @@ export default class Home extends React.Component {
             feed2,
             duty_cycle 
         } = this.state
+        // Data Device Still Hardcoded
+        let data_device = [
+            {
+                label: 'Kolam28X',
+                value: 'AQT28X'
+            },
+            {
+                label: 'KolamB01',
+                value: 'AQTB01'
+            }
+        ]
         return (
             <React.Fragment>
-                <Header/>
+                <Header />
                 <View style={styles.container}>
                     {/* { !isConnected && <OfflineNotification/> } */}
                     <Loader loading={this.state.loading} />
                     <Text style={styles.welcome}>
-                        AQT28X
+                        Monitoring Page
                     </Text>
+                    <Dropdown
+                        label='Device'
+                        data={data_device}
+                        value={this.state.idDevice}                            
+                        useNativeDriver={true}                            
+                        containerStyle={{width: 200}}
+                        onChangeText={(value,index,data) => this.setSelectedStateValue(value)}
+                    />
                     <Text style={styles.instructions}>
                         pH value: {ph}
                     </Text>
@@ -119,7 +150,10 @@ export default class Home extends React.Component {
                     <Text style={styles.instructions}>
                         Feeder 2 value: {feed2} cm
                     </Text>
-                    <TouchableOpacity onPress={this.onLogout}>
+                    <TouchableOpacity
+                        onPress={this.onLogout}
+                        style={styles.bottom}
+                    >
                         <Text>LOGOUT</Text>
                     </TouchableOpacity>
                 </View>
@@ -131,14 +165,14 @@ export default class Home extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#FFFFFF',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     welcome: {
         fontSize: 20,
         textAlign: 'center',
-        margin: 10,
+        marginTop: 30,
         color: '#000000',
     },
     instructions: {
@@ -146,4 +180,9 @@ const styles = StyleSheet.create({
         color: '#000000',
         marginBottom: 5,
     },
+    bottom: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginBottom: 30
+    }
 });

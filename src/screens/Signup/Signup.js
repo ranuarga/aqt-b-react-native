@@ -1,7 +1,6 @@
 import React from 'react'
-import { StyleSheet, TextInput, Text, View, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
+import { StyleSheet, TextInput, Text, View, TouchableOpacity, ScrollView, Dimensions, LogBox } from 'react-native'
 import { Dropdown } from 'react-native-material-dropdown'
-import { LogBox } from 'react-native';
 import { register } from '../../utils/JWTAuth'
 import Loader from '../../components/Loader'
 
@@ -60,7 +59,7 @@ export default class Signup extends React.Component {
             'Animated: `useNativeDriver`',
             'componentWillUpdate',
             'componentWillReceiveProps'
-        ]);
+        ])
     }
     
     render() {
