@@ -25,7 +25,20 @@ export default class Home extends React.Component {
     }
 
     setSelectedStateValue = (ddlValue) => {
-        this.setState({ idDevice: ddlValue })
+        if(this.state.idDevice != '') {
+            MqttService.unsubscribe(this.state.idDevice)
+        }
+        this.setState({ 
+            idDevice: ddlValue,
+            feed1: '',
+            ph: '',
+            temperature: '',
+            do2: '',
+            ammonia: '',
+            feed2: '',
+            duty_cycle: ''
+        })
+        MqttService.subscribe(this.state.idDevice, this.onSub)
     }
 
     async componentDidMount() {
@@ -36,10 +49,10 @@ export default class Home extends React.Component {
         ])
 
         this._isMounted = true
-        // MqttService.connectClient(
-        //     this.mqttSuccessHandler,
-        //     this.mqttConnectionLostHandler
-        // )
+        MqttService.connectClient(
+            this.mqttSuccessHandler,
+            this.mqttConnectionLostHandler
+        )
         try {
             let devices = []
             let success = await getDevice()
@@ -63,15 +76,22 @@ export default class Home extends React.Component {
     }
 
     mqttSuccessHandler = () => {
-        MqttService.subscribe('AQT28X', this.onSub)
+        console.log('Connection Success')
         if (this._isMounted) {
             this.setState({
                 isConnected: true
             })
         }
+        // MqttService.subscribe('AQT28X', this.onSub)
+        // if (this._isMounted) {
+        //     this.setState({
+        //         isConnected: true
+        //     })
+        // }
     }
 
     mqttConnectionLostHandler = () => {
+        console.log('Connection Lost')
         this.setState({
             isConnected: false
         })
@@ -94,17 +114,17 @@ export default class Home extends React.Component {
         this.setState({
             loading: true
         })
-        // try {
-        //     await MqttService.unsubscribe('AQT28X')
-        //     await MqttService.disconnectClient()
-        //     await logout()
-        //     this.setState({
-        //         loading: false
-        //     })
-        //     this.props.navigation.navigate('Login')
-        // } catch (error) {
-        //     alert(error)
-        // }
+        try {
+            await MqttService.unsubscribe(this.state.idDevice)
+            await MqttService.disconnectClient()
+            await logout()
+            this.setState({
+                loading: false
+            })
+            this.props.navigation.navigate('Login')
+        } catch (error) {
+            alert(error)
+        }
     }    
 
     render() {
