@@ -1,5 +1,5 @@
 import React from 'react';
-import { logout } from '../../utils/JWTAuth'
+import { logout, getDevice } from '../../utils/JWTAuth'
 import Loader from '../../components/Loader'
 import Header from '../../components/Header'
 import { StyleSheet, Text, View, TouchableOpacity, LogBox } from 'react-native'
@@ -21,13 +21,14 @@ export default class Home extends React.Component {
         feed2: '',
         duty_cycle: '',
         idDevice: '',
+        data_device: []
     }
 
     setSelectedStateValue = (ddlValue) => {
         this.setState({ idDevice: ddlValue })
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         LogBox.ignoreLogs([
             'Animated: `useNativeDriver`',
             'componentWillUpdate',
@@ -35,10 +36,26 @@ export default class Home extends React.Component {
         ])
 
         this._isMounted = true
-        MqttService.connectClient(
-            this.mqttSuccessHandler,
-            this.mqttConnectionLostHandler
-        )
+        // MqttService.connectClient(
+        //     this.mqttSuccessHandler,
+        //     this.mqttConnectionLostHandler
+        // )
+        try {
+            let devices = []
+            let success = await getDevice()
+            if(success) {
+                success.forEach(device => {
+                    let arr = {
+                        'label': device.name,
+                        'value': device.id
+                    }
+                    devices.push(arr)
+                })
+            }
+            this.setState({ data_device: devices })
+        } catch (error) {
+            alert(error)
+        }
     }
 
     componentWillUnmount() {
@@ -77,17 +94,17 @@ export default class Home extends React.Component {
         this.setState({
             loading: true
         })
-        try {
-            await MqttService.unsubscribe('AQT28X')
-            await MqttService.disconnectClient()
-            await logout()
-            this.setState({
-                loading: false
-            })
-            this.props.navigation.navigate('Login')
-        } catch (error) {
-            alert(error)
-        }
+        // try {
+        //     await MqttService.unsubscribe('AQT28X')
+        //     await MqttService.disconnectClient()
+        //     await logout()
+        //     this.setState({
+        //         loading: false
+        //     })
+        //     this.props.navigation.navigate('Login')
+        // } catch (error) {
+        //     alert(error)
+        // }
     }    
 
     render() {
@@ -99,19 +116,9 @@ export default class Home extends React.Component {
             do2,
             ammonia,
             feed2,
-            duty_cycle 
+            duty_cycle,
+            data_device
         } = this.state
-        // Data Device Still Hardcoded
-        let data_device = [
-            {
-                label: 'Kolam28X',
-                value: 'AQT28X'
-            },
-            {
-                label: 'KolamB01',
-                value: 'AQTB01'
-            }
-        ]
         return (
             <React.Fragment>
                 <Header />

@@ -35,13 +35,34 @@ const register = async (data) => {
             responseType: 'json',
             url: SIGNUP_ENDPOINT,
             data: data
-        });
+        })
         if(response.data.success) 
             return true
         else
             return false
     } catch(e){
-        console.log(e);
+        console.log(e)
+    }
+}
+
+const getDevice = async () => {
+    const token = await AsyncStorage.getItem('token')
+    const GET_DEVICE_ENDPOINT = `${SERVER_URL}/management/device`;
+    try {
+        let response = await axios({
+            method: 'get',
+            responseType: 'json',
+            url: GET_DEVICE_ENDPOINT,
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        if(response.data)
+            return response.data.data
+        else
+            return null
+    } catch (e) {
+        console.log(e)
     }
 }
 
@@ -69,5 +90,6 @@ export {
     login, 
     register,
     logout,
-    isLoggedIn
+    isLoggedIn,
+    getDevice
 }
