@@ -39,6 +39,7 @@ export default class Home extends React.Component {
             duty_cycle: ''
         })
         MqttService.subscribe(this.state.idDevice, this.onSub)
+        MqttService.publishMessage(this.state.idDevice + '/ASKING', '1')
     }
 
     async componentDidMount() {
